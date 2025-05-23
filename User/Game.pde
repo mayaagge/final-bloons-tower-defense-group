@@ -19,3 +19,21 @@ public void setGameState(boolean state){
 public boolean getGameState(){
   return gameState;
 }
+public void setLives(int Lives){
+  lives = Lives;
+}
+public int getLives(){
+  return lives;
+}
+public void setMoney(int Money){
+  money = Money;
+}
+public int getMoney(){
+  return money;
+}
+public void setMode(int Mode){
+  gameMode = Mode;
+}
+public int getGameMode(){
+  return gameMode;
+}
