@@ -24,4 +24,7 @@ class Projectile {
     triangle(0, -3, -3, 0, 0, 3);
     popMatrix();
   }
+  boolean hits(Bloon b) {
+    return position.dist(b.position) < 10;
+  }
 }
