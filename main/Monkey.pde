@@ -1,7 +1,7 @@
 class Monkey {
   PVector position;
-  float range = 100;
-  int cooldown = 60, timer = 0;
+  float range = 200;
+  int cooldown = 9, timer = 0;
   PImage img;
 
   Monkey(PImage img, float x, float y) {
@@ -25,8 +25,7 @@ class Monkey {
   }
 
   void display() {
-    imageMode(CENTER);
-    image(img, position.x, position.y, 40, 40);
+    image(img, position.x - 20, position.y - 20, 40, 40);
     noFill();
     stroke(0, 100);
     ellipse(position.x, position.y, range * 2, range * 2);
