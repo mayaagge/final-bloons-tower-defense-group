@@ -1,5 +1,6 @@
 User user;
 Game myGame;
+PImage dart_monkey = loadImage("dart_monkey.pdf"); 
 ArrayList<Projectile> projectiles;
 void setup() {
   size(1080, 720);
@@ -17,6 +18,7 @@ void setup() {
 void draw() {
   background(200);
   drawPath();
+  Monkey(dart_monkey, 100, 100);
   for(int i = projectiles.size()-1; i>=0;i--){
     Projectile proj = projectiles.get(i);
     proj.update();
