@@ -1,5 +1,6 @@
 User user;
 Game myGame;
+PImage dart_monkey; 
 ArrayList<Projectile> projectiles;
 void setup() {
   size(1080, 720);
@@ -13,10 +14,13 @@ void setup() {
   println("Money: " + myGame.getMoney());
   println("Game Running: " + myGame.getGameState());
   println("Name: " + user.getName()); 
+  dart_monkey = loadImage("dart_monkey.png");
 }
 void draw() {
   background(200);
   drawPath();
+  Monkey dart1 = new Monkey(dart_monkey, 400, 400);
+  dart1.display();
   for(int i = projectiles.size()-1; i>=0;i--){
     Projectile proj = projectiles.get(i);
     proj.update();
