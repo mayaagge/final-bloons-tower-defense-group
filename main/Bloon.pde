@@ -1,5 +1,6 @@
 class Bloon {
-  PImage mapBackground = loadImage("BloonRed.png");
+  PImage explodeImage = loadImage("BloonExplode.png");
+  PImage redBloon = loadImage("BloonRed.png");
   ArrayList<PVector> path;
   int pathIndex = 0;
   PVector position;
@@ -41,6 +42,10 @@ class Bloon {
 }
 
 void display() {
-  image(mapBackground, position.x - 40, position.y - 40, 100, 100);
-}
+  if (pathIndex == path.size() - 1) {
+    image(explodeImage, position.x - 40, position.y - 40, 100, 100);
+    myGame.setLives(myGame.getLives() - 1);
+  } else {
+    image(redBloon, position.x - 40, position.y - 40, 100, 100);
+  }}
 }
