@@ -1,5 +1,6 @@
 User user;
 Game myGame;
+<<<<<<< HEAD
 PImage mapBackground;
 PImage STARTSCREEN;
 ArrayList<Bloon> bloons;
@@ -9,6 +10,8 @@ Monkey draggedmonkeytemporarything = null;
 PImage monkeyImage;
 
 
+=======
+>>>>>>> main
 ArrayList<Projectile> projectiles;
 void setup() {
   size(1080, 720);
@@ -29,6 +32,7 @@ void setup() {
   println("Money: " + myGame.getMoney());
   println("Game Running: " + myGame.getGameState());
   println("Name: " + user.getName()); 
+  dart_monkey = loadImage("dart_monkey.png");
 }
 
 void keyPressed() {
@@ -71,6 +75,7 @@ void draw() {
   background(200);
   image(mapBackground, 0, 0, width, height);
   drawPath();
+<<<<<<< HEAD
   drawLives();
   
   
