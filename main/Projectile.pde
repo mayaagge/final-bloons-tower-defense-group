@@ -10,6 +10,11 @@ class Projectile {
 
   void update() {
     position.add(velocity);
+    for (Bloon b : bloons) {
+      if (position.dist(b.position) < 10) {
+        b.popped();
+      }
+    }
   }
   void display() {
     pushMatrix();
