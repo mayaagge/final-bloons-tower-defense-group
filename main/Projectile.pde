@@ -1,20 +1,29 @@
 class Projectile {
   PVector position, velocity;
   int damage;
+  int pierce;
+  int attkRadius;
 
-  Projectile(PVector pos, PVector vel, int level) {
+  Projectile(PVector pos, PVector vel, int level, int pierce, int attkRadius) {
     position = pos;
     velocity = vel;
     damage = level;
+    this.pierce = pierce;
+    this.attkRadius = attkRadius;
   }
 
   void update() {
     position.add(velocity);
     for (Bloon b : bloons) {
-      if (position.dist(b.position) < 10) {
+      if (position.dist(b.position) < attkRadius) {
         b.popped();
+        pierce--;
       }
     }
+    
+  }
+  int getPierce(){
+    return pierce;
   }
   void display() {
     pushMatrix();
@@ -30,6 +39,6 @@ class Projectile {
     popMatrix();
   }
   boolean hits(Bloon b) {
-    return position.dist(b.position) < 10;
+    return position.dist(b.position) < attkRadius;
   }
 }

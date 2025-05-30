@@ -8,6 +8,7 @@ class Bloon {
   int health, reward, damage;
   String type;
   boolean pop = false;
+  int poptime = 0;
   Bloon(ArrayList<PVector> path, int index, float offset, String type) {
     this.path = path;
     this.type = type;
@@ -39,18 +40,25 @@ class Bloon {
       pathIndex++;
     }
   }
+  if(poptime >= 1){
+    poptime++;
+  }
 }
 
-
+int getPopTime(){
+  return poptime;
+}
 void popped() {
   pop = true;
+  poptime = 1;
 }
 
 
 void display() {
   if (pathIndex == path.size() - 1 || pop == true) {
     image(explodeImage, position.x - 40, position.y - 40, 100, 100);
-    myGame.setLives(myGame.getLives() - 1);
+    poptime = 2;
+    myGame.setLives(myGame.getLives() - health);
   } else {
     image(redBloon, position.x - 40, position.y - 40, 100, 100);
   }}
