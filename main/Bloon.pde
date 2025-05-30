@@ -1,31 +1,19 @@
-class Bloon {
+class Bloon{
   PImage explodeImage = loadImage("BloonExplode.png");
-  PImage redBloon = loadImage("BloonRed.png");
+  BloonType type;
   ArrayList<PVector> path;
   int pathIndex = 0;
   PVector position;
-  float speed;
-  int health, reward, damage;
-  String type;
+  int health;
   boolean pop = false;
   int poptime = 0;
+  boolean reachedEnd = false;
   
-  Bloon(ArrayList<PVector> path, int index, float offset, String type) {
+  Bloon(ArrayList<PVector> path, float offset, BloonType type) {
     this.path = path;
     this.type = type;
-    this.pathIndex = index;
-    position = path.get(0).copy().add(offset, 0);
-    if (type.equals("red")) {
-      speed = 34.5;
-      health = 1;
-      reward = 1;
-      damage = 1;
-    } else {
-      speed = 2.0;
-      health = 2;
-      reward = 2;
-      damage = 2;
-    }
+    this.health = type.health;
+    this.position = path.get(0).copy().add(offset, 0);
   }
   
   
@@ -33,37 +21,50 @@ class Bloon {
   if (pathIndex < path.size() - 1) {
     PVector target = path.get(pathIndex + 1);
     PVector direction = target.copy();
-    direction.sub(position);
-    direction.normalize();
-    direction.mult(speed);    
     position.add(direction);
-    if (position.dist(target) < speed) {
+    if (position.dist(target) < type.speed) {
       pathIndex++;
     }
   }
-  if(poptime >= 1){
-    poptime++;
-  }
+  else {
+      reachedEnd = true;
+      poptime = 1;
+      myGame.setLives(myGame.getLives() - type.damage);
+    }
 }
 
 int getPopTime(){
   return poptime;
 }
 
-void popped() {
+void pop() {
   pop = true;
   poptime = 1;
+  
+  if(type.equals("blue")) {
+    bloons.add(new Bloon(path, pathIndex, 0, "red"));
+  }
 }
 
+void lowerHealth(int n) {
+  if (popped || reachedEnd) return;
+
+    health -= dmg;
+    if (health <= 0) {
+      pop();
+    }
+}
 
 void display() {
   if (pathIndex == path.size() - 1 || pop == true) {
     image(explodeImage, position.x - 40, position.y - 40, 100, 100);
     poptime = 2;
+    
     if(pathIndex == path.size() - 1) {
       myGame.setLives(myGame.getLives() - health);
     }
+    
   } else {
-    image(redBloon, position.x - 40, position.y - 40, 100, 100);
+    image(Bloon, position.x - 40, position.y - 40, 100, 100);
   }}
 }

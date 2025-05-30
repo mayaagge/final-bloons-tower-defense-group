@@ -16,15 +16,16 @@ class Projectile {
     position.add(velocity);
     for (Bloon b : bloons) {
       if (position.dist(b.position) < attkRadius) {
-        b.popped();
+        b.lowerHealth(1);
         pierce--;
       }
     }
-    
   }
+  
   int getPierce(){
     return pierce;
   }
+  
   void display() {
     pushMatrix();
     translate(position.x, position.y);
@@ -38,6 +39,7 @@ class Projectile {
     triangle(0, -3, -3, 0, 0, 3);
     popMatrix();
   }
+  
   boolean hits(Bloon b) {
     return position.dist(b.position) < attkRadius;
   }

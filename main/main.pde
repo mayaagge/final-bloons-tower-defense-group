@@ -37,7 +37,7 @@ void keyPressed() {
   }
   
   if (key == 'a') {
-    bloons.add(new Bloon(path, 0, 0, "red"));
+    bloons.add(new Bloon(path, 0, 0, "blue"));
   }
   
   if (key == 'm' || key == 'M') {
@@ -75,8 +75,8 @@ void draw() {
   background(200);
   image(mapBackground, 0, 0, width, height);
   drawPath();
-  drawLives();
-  drawMoney();
+  myGame.drawLives();
+  myGame.drawMoney();
   
   for (int i = bloons.size() - 1; i >= 0; i--) {
     Bloon b = bloons.get(i);
@@ -112,18 +112,4 @@ void draw() {
     draggedmonkeytemporarything.setPosition(mouseX, mouseY);
     draggedmonkeytemporarything.display();
   }
-}
-
-void drawLives() {
-  fill(0);
-  textSize(24);
-  textAlign(RIGHT, TOP);
-  text("Lives: " + myGame.getLives(), width - 20, 20);
-}
-
-void drawMoney() {
-  fill(0);
-  textSize(24);
-  textAlign(RIGHT, TOP);
-  text("Moneys: " + myGame.getMoney(), width - 200, 20);
 }
