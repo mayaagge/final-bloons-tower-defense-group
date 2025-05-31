@@ -16,7 +16,7 @@ class Bloon {
     this.pathIndex = index;
     position = path.get(0).copy().add(offset, 0);
     if (type.equals("red")) {
-      speed = 34.5;
+      speed = 10;
       health = 1;
       reward = 1;
       damage = 1;

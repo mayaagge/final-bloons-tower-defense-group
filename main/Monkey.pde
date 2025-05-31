@@ -3,12 +3,29 @@ class Monkey {
   float range = 200;
   int cooldown = 9, timer = 0;
   PImage img;
+  String type;
+  float projectileSpeed;
+  int pierce;
 
-  Monkey(PImage img, float x, float y) {
+  Monkey(PImage img, float x, float y, String type) {
     this.img = img;
     this.position = new PVector(x, y);
+    this.type = type;
+    setStats();
   }
-
+  void setStats(){
+    if (type.equals("Dart")) {
+      range = 200;
+      cooldown = 30;
+      pierce = 1;
+      projectileSpeed = 5;
+    } else if (type.equals("Sniper")) {
+      range = 300;
+      cooldown = 90;
+      pierce = 2;
+      projectileSpeed = 10;
+    }
+  }
   void update(ArrayList<Bloon> bloons, ArrayList<Projectile> projectiles) {
     if (timer > 0) {
       timer--;

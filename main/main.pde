@@ -9,7 +9,10 @@ boolean gameStarted = false;
 ArrayList<Monkey> monkeys;
 Monkey draggedmonkeytemporarything = null;
 PImage monkeyImage;
-
+String selectedMonkeyType = null; 
+boolean selectingMonkey = false;
+PImage dartMonkey;
+PImage sniperMonkey;
 
 ArrayList<Projectile> projectiles;
 void setup() {
@@ -18,8 +21,11 @@ void setup() {
   STARTSCREEN = loadImage("STARTSCREEN.png");
   LOSESCREEN = loadImage("LOSESCREEN.jpg");
   
+  dartMonkey = loadImage("dartMonkey.png");
+  sniperMonkey = loadImage("sniperMonkey.png");
+  
   monkeys = new ArrayList<Monkey>();
-  monkeyImage = loadImage("Monkey.png");
+  //monkeyImage = loadImage("Monkey.png");
   makePath();
   bloons = new ArrayList<Bloon>();
   bloons.add(new Bloon(path, 0, 0, "red"));
@@ -39,18 +45,39 @@ void keyPressed() {
   if (key == 'a') {
     bloons.add(new Bloon(path, 0, 0, "red"));
   }
-  
+  if (key == 'm' || key == 'M') {
+    selectingMonkey = true;
+    selectedMonkeyType = null;
+    draggedmonkeytemporarything = null;
+  }
+  /*
   if (key == 'm' || key == 'M') {
     if (draggedmonkeytemporarything == null) {
       draggedmonkeytemporarything = new Monkey(monkeyImage, mouseX, mouseY);
     }
   }
+  */
 }
 
 void mousePressed() {
+  if (selectingMonkey) {
+    if (mouseY > 20 && mouseY < 60 && mouseX > 20 && mouseX < 140) {
+      selectedMonkeyType = "Dart";
+      draggedmonkeytemporarything = new Monkey(dartMonkey, mouseX, mouseY, "Dart");
+      selectingMonkey = false;
+      return;
+    }
+    else if (mouseY > 70 && mouseY < 110 && mouseX > 20 && mouseX < 140) {
+      selectedMonkeyType = "Sniper";
+      draggedmonkeytemporarything = new Monkey(sniperMonkey, mouseX, mouseY, "Sniper");
+      selectingMonkey = false;
+      return;
+    }
+  }
   if (draggedmonkeytemporarything != null) {
     monkeys.add(draggedmonkeytemporarything);
     draggedmonkeytemporarything = null;
+    selectedMonkeyType = null;
   }
 }
 
@@ -112,6 +139,9 @@ void draw() {
     draggedmonkeytemporarything.setPosition(mouseX, mouseY);
     draggedmonkeytemporarything.display();
   }
+  if (selectingMonkey) {
+    drawMonkeySelectionUI();
+  }
 }
 
 void drawLives() {
@@ -126,4 +156,23 @@ void drawMoney() {
   textSize(24);
   textAlign(RIGHT, TOP);
   text("Moneys: " + myGame.getMoney(), width - 200, 20);
+}
+
+void drawMonkeySelectionUI() {
+  fill(255);
+  stroke(0);
+  rect(20, 20, 120, 40);
+  fill(0);
+  textAlign(CENTER, CENTER);
+  text("Dart Monkey", 80, 40);
+
+  fill(255);
+  stroke(0);
+  rect(20, 70, 120, 40);
+  fill(0);
+  text("Sniper Monkey", 80, 90);
+
+  fill(50, 50, 255, 100);
+  textSize(14);
+  text("Click to choose a monkey", width/2, height - 30);
 }
