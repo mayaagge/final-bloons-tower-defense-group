@@ -17,7 +17,7 @@ class Monkey {
     for (Bloon b : bloons) {
       if (position.dist(b.position) < range) {
         PVector vel = PVector.sub(b.position, position).normalize().mult(5);
-        projectiles.add(new Projectile(position.copy(), vel, 10));
+        projectiles.add(new Projectile(position.copy(), vel, 10, 1, 25));
         timer = cooldown;
         break;
       }

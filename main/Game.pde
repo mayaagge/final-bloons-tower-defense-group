@@ -4,7 +4,7 @@ private int money;
 private int gameMode;
 private boolean gameState;
  Game(){
-  lives = 100;
+  lives = 10;
   money = 600;
   gameMode = 1;
 }
