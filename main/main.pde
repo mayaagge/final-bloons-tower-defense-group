@@ -50,13 +50,6 @@ void keyPressed() {
     selectedMonkeyType = null;
     draggedmonkeytemporarything = null;
   }
-  /*
-  if (key == 'm' || key == 'M') {
-    if (draggedmonkeytemporarything == null) {
-      draggedmonkeytemporarything = new Monkey(monkeyImage, mouseX, mouseY);
-    }
-  }
-  */
 }
 
 void mousePressed() {
@@ -66,15 +59,28 @@ void mousePressed() {
       draggedmonkeytemporarything = new Monkey(dartMonkey, mouseX, mouseY, "Dart");
       selectingMonkey = false;
       return;
-    }
-    else if (mouseY > 70 && mouseY < 110 && mouseX > 20 && mouseX < 140) {
+    } else if (mouseY > 70 && mouseY < 110 && mouseX > 20 && mouseX < 140) {
       selectedMonkeyType = "Sniper";
       draggedmonkeytemporarything = new Monkey(sniperMonkey, mouseX, mouseY, "Sniper");
       selectingMonkey = false;
       return;
     }
   }
+
   if (draggedmonkeytemporarything != null) {
+    PVector pos = new PVector(mouseX, mouseY);
+
+    if (isOnPath(pos)) {
+      println("Can't place monkey on the path!");
+      return;
+    }
+
+    if (isOverlapping(pos)) {
+      println("Can't place monkey on top of another!");
+      return;
+    }
+
+    draggedmonkeytemporarything.setPosition(mouseX, mouseY);
     monkeys.add(draggedmonkeytemporarything);
     draggedmonkeytemporarything = null;
     selectedMonkeyType = null;
@@ -175,4 +181,21 @@ void drawMonkeySelectionUI() {
   fill(50, 50, 255, 100);
   textSize(14);
   text("Click to choose a monkey", width/2, height - 30);
+}
+boolean isOnPath(PVector pos) {
+  for (PVector p : parameterize()) {
+    if (PVector.dist(p, pos) < 20) {
+      return true;
+    }
+  }
+  return false;
+}
+
+boolean isOverlapping(PVector pos) {
+  for (Monkey m : monkeys) {
+    if (PVector.dist(pos, m.position) < 40) {
+      return true;
+    }
+  }
+  return false;
 }
