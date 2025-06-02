@@ -1,7 +1,7 @@
 class Monkey {
   PVector position;
-  float range = 200;
-  int cooldown = 9, timer = 0;
+  float range;
+  int cooldown, timer = 0;
   PImage img;
   String type;
   float projectileSpeed;
@@ -33,7 +33,13 @@ class Monkey {
     }
     for (Bloon b : bloons) {
       if (position.dist(b.position) < range) {
-        PVector vel = PVector.sub(b.position, position).normalize().mult(5);
+        PVector bloonVel = new PVector(0, 0);
+        if (b.pathIndex < b.path.size() - 1) {
+          PVector nextTarget = b.path.get(b.pathIndex + 1).copy();
+          bloonVel = PVector.sub(nextTarget, b.position).normalize().mult(b.speed);
+        }
+        PVector futurePos = PVector.add(b.position, PVector.mult(bloonVel, 10));
+        PVector vel = PVector.sub(futurePos, position).normalize().mult(projectileSpeed);
         projectiles.add(new Projectile(position.copy(), vel, 10, 1, 25));
         timer = cooldown;
         break;
@@ -43,8 +49,16 @@ class Monkey {
 
   void display() {
     image(img, position.x - 20, position.y - 20, 40, 40);
-    noFill();
+    boolean isDragging = (this == draggedmonkeytemporarything);
     stroke(0, 100);
+    if (isDragging) {
+      if (isOnPath(position) || isOverlapping(position)) {
+        stroke(255, 0, 0, 150); 
+      } else {
+        stroke(0, 255, 0, 150); 
+      }
+    }
+    noFill();
     ellipse(position.x, position.y, range * 2, range * 2);
   }
 
