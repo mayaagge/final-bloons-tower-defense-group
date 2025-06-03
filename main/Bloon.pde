@@ -5,7 +5,7 @@ class Bloon{
   int pathIndex = 0;
   PVector position;
   int health;
-  boolean pop = false;
+  boolean popped = false;
   int poptime = 0;
   boolean reachedEnd = false;
   
@@ -16,11 +16,22 @@ class Bloon{
     this.position = path.get(0).copy().add(offset, 0);
   }
   
+  Bloon(ArrayList<PVector> path, PVector position, BloonType type) {
+    this.path = path;
+    this.type = type;
+    this.health = type.health;
+    this.position = position.copy();
+}
   
-  void update() {
+  
+void update() {
+  if (popped) {
+    poptime++;
+    return;
+  }
   if (pathIndex < path.size() - 1) {
     PVector target = path.get(pathIndex + 1);
-    PVector direction = target.copy();
+    PVector direction = PVector.sub(target, position).normalize().mult(type.speed);
     position.add(direction);
     if (position.dist(target) < type.speed) {
       pathIndex++;
@@ -37,34 +48,34 @@ int getPopTime(){
   return poptime;
 }
 
-void pop() {
-  pop = true;
+void pop(ArrayList<Bloon> newBloons) {
+  popped = true;
   poptime = 1;
   
-  if(type.equals("blue")) {
-    bloons.add(new Bloon(path, pathIndex, 0, "red"));
-  }
+  if (type.childType != null || type.childType.equals("")) {
+      BloonType child = main.gimmeTheDamnBloonType(type.childType);
+      if (child != null) {
+        newBloons.add(new Bloon(path, position.copy(), child));
+      }
+    }
 }
 
-void lowerHealth(int n) {
+
+
+void lowerHealth(int n, ArrayList<Bloon> newBloons) {
   if (popped || reachedEnd) return;
 
-    health -= dmg;
+    health -= n;
     if (health <= 0) {
-      pop();
+      pop(newBloons);
     }
 }
 
 void display() {
-  if (pathIndex == path.size() - 1 || pop == true) {
-    image(explodeImage, position.x - 40, position.y - 40, 100, 100);
-    poptime = 2;
-    
-    if(pathIndex == path.size() - 1) {
-      myGame.setLives(myGame.getLives() - health);
+  if (popped || reachedEnd) {
+      image(explodeImage, position.x - 40, position.y - 40, 100, 100);
+    } else {
+      image(type.image, position.x - 40, position.y - 40, 100, 100);
     }
-    
-  } else {
-    image(Bloon, position.x - 40, position.y - 40, 100, 100);
-  }}
+  }
 }

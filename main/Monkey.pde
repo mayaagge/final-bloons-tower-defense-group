@@ -1,7 +1,7 @@
 class Monkey {
   PVector position;
   float range = 200;
-  int cooldown = 9, timer = 0;
+  int cooldown = 11, timer = 0;
   PImage img;
 
   Monkey(PImage img, float x, float y) {

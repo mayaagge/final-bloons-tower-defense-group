@@ -12,15 +12,15 @@ class Projectile {
     this.attkRadius = attkRadius;
   }
 
-  void update() {
-    position.add(velocity);
-    for (Bloon b : bloons) {
-      if (position.dist(b.position) < attkRadius) {
-        b.lowerHealth(1);
-        pierce--;
+  void update(ArrayList<Bloon> newBloons) {
+  position.add(velocity);
+  for (Bloon b : bloons) {
+    if (position.dist(b.position) < attkRadius) {
+      b.lowerHealth(1, newBloons);
+      pierce--;
       }
     }
-  }
+  }  
   
   int getPierce(){
     return pierce;
