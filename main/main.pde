@@ -4,7 +4,8 @@ Game myGame;
 PImage mapBackground;
 PImage STARTSCREEN;
 PImage LOSESCREEN;
-ArrayList<Bloon> bloons;
+static ArrayList<BloonType> allBloonTypes = new ArrayList<BloonType>();
+ArrayList<Bloon> bloons = new ArrayList<Bloon>();
 boolean gameStarted = false;
 ArrayList<Monkey> monkeys;
 Monkey draggedmonkeytemporarything = null;
@@ -17,23 +18,40 @@ int outOfMoney;
 ArrayList<Projectile> projectiles;
 void setup() {
   size(1080, 720);
+  
+ //IMAGESSS
   mapBackground = loadImage("MonkeyMeadow.png");
   STARTSCREEN = loadImage("STARTSCREEN.png");
   LOSESCREEN = loadImage("LOSESCREEN.jpg");
   
+
   dartMonkey = loadImage("dartMonkey.png");
   sniperMonkey = loadImage("sniperMonkey.png");
   
   monkeys = new ArrayList<Monkey>();
   //monkeyImage = loadImage("Monkey.png");
   makePath();
-  bloons = new ArrayList<Bloon>();
-  bloons.add(new Bloon(path, 0, 0, "red"));
-
+  
+  //BLOONS SETUP
+  PImage redImg = loadImage("BloonRed.png");
+  PImage blueImg = loadImage("BloonBlue.png");
+  allBloonTypes.add(new BloonType("red", redImg, 4.5, 1, 1, 1, ""));
+  allBloonTypes.add(new BloonType("blue", blueImg, 2.5, 2, 2, 1, "red"));
+  
+  //PROJ
   projectiles = new ArrayList<Projectile>();
   projectiles.add(new Projectile(new PVector(width/2, height/2), new PVector(2, 0), 10, 1, 25));
   myGame = new Game();
   myGame.setGameState(true);
+}
+
+static BloonType gimmeTheDamnBloonType(String name) {
+  for (BloonType bt : allBloonTypes) {
+    if (bt.name.equals(name)) {
+      return bt;
+    }
+  }
+  return null;
 }
 
 void keyPressed() {
@@ -43,7 +61,8 @@ void keyPressed() {
   }
   
   if (key == 'a') {
-    bloons.add(new Bloon(path, 0, 0, "red"));
+    BloonType blueType = gimmeTheDamnBloonType("blue");
+    bloons.add(new Bloon(path, 0, blueType));
   }
   if (key == 'm' || key == 'M') {
     selectingMonkey = true;
@@ -130,11 +149,12 @@ void draw() {
       return;
   }
   
+  ArrayList<Bloon> newBloons = new ArrayList<>();
   background(200);
   image(mapBackground, 0, 0, width, height);
   drawPath();
-  drawLives();
-  drawMoney();
+  myGame.drawLives();
+  myGame.drawMoney();
   
   for (int i = bloons.size() - 1; i >= 0; i--) {
     Bloon b = bloons.get(i);
@@ -142,24 +162,24 @@ void draw() {
       bloons.remove(i);
     }
     else{
-    b.update();
-    b.display();
+      b.update();
+      b.display();
     }
   }
   
   for(int i = projectiles.size()-1; i>=0;i--){
     Projectile proj = projectiles.get(i);
-    if (proj.getPierce() <= 0){
-      projectiles.remove(proj);
-    }
-    else{
-    proj.update();
-    proj.display();
+    if (proj.getPierce() <= 0) {
+      projectiles.remove(i);
+    } else {
+      proj.update(newBloons);
+      proj.display();
     }
     if (proj.position.y >= 700) {
-      projectiles.remove(proj);
+      projectiles.remove(i);
     }
   }
+  bloons.addAll(newBloons);
   
   for (Monkey m : monkeys) {
     m.update(bloons, projectiles);
