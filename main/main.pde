@@ -10,7 +10,10 @@ boolean gameStarted = false;
 ArrayList<Monkey> monkeys;
 Monkey draggedmonkeytemporarything = null;
 PImage monkeyImage;
-
+String selectedMonkeyType = null; 
+boolean selectingMonkey = false;
+PImage dartMonkey;
+PImage sniperMonkey;
 
 ArrayList<Projectile> projectiles;
 void setup() {
@@ -21,9 +24,12 @@ void setup() {
   STARTSCREEN = loadImage("STARTSCREEN.png");
   LOSESCREEN = loadImage("LOSESCREEN.jpg");
   
-  //MONKEE
+
+  dartMonkey = loadImage("dartMonkey.png");
+  sniperMonkey = loadImage("sniperMonkey.png");
+  
   monkeys = new ArrayList<Monkey>();
-  monkeyImage = loadImage("Monkey.png");
+  //monkeyImage = loadImage("Monkey.png");
   makePath();
   
   //BLOONS SETUP
@@ -58,18 +64,45 @@ void keyPressed() {
     BloonType blueType = gimmeTheDamnBloonType("blue");
     bloons.add(new Bloon(path, 0, blueType));
   }
-  
   if (key == 'm' || key == 'M') {
-    if (draggedmonkeytemporarything == null) {
-      draggedmonkeytemporarything = new Monkey(monkeyImage, mouseX, mouseY);
-    }
+    selectingMonkey = true;
+    selectedMonkeyType = null;
+    draggedmonkeytemporarything = null;
   }
 }
 
 void mousePressed() {
+  if (selectingMonkey) {
+    if (mouseY > 20 && mouseY < 60 && mouseX > 20 && mouseX < 140) {
+      selectedMonkeyType = "Dart";
+      draggedmonkeytemporarything = new Monkey(dartMonkey, mouseX, mouseY, "Dart");
+      selectingMonkey = false;
+      return;
+    } else if (mouseY > 70 && mouseY < 110 && mouseX > 20 && mouseX < 140) {
+      selectedMonkeyType = "Sniper";
+      draggedmonkeytemporarything = new Monkey(sniperMonkey, mouseX, mouseY, "Sniper");
+      selectingMonkey = false;
+      return;
+    }
+  }
+
   if (draggedmonkeytemporarything != null) {
+    PVector pos = new PVector(mouseX, mouseY);
+
+    if (isOnPath(pos)) {
+      println("Can't place monkey on the path!");
+      return;
+    }
+
+    if (isOverlapping(pos)) {
+      println("Can't place monkey on top of another!");
+      return;
+    }
+
+    draggedmonkeytemporarything.setPosition(mouseX, mouseY);
     monkeys.add(draggedmonkeytemporarything);
     draggedmonkeytemporarything = null;
+    selectedMonkeyType = null;
   }
 }
 
@@ -132,4 +165,57 @@ void draw() {
     draggedmonkeytemporarything.setPosition(mouseX, mouseY);
     draggedmonkeytemporarything.display();
   }
+  if (selectingMonkey) {
+    drawMonkeySelectionUI();
+  }
+}
+
+void drawLives() {
+  fill(0);
+  textSize(24);
+  textAlign(RIGHT, TOP);
+  text("Lives: " + myGame.getLives(), width - 20, 20);
+}
+
+void drawMoney() {
+  fill(0);
+  textSize(24);
+  textAlign(RIGHT, TOP);
+  text("Moneys: " + myGame.getMoney(), width - 200, 20);
+}
+
+void drawMonkeySelectionUI() {
+  fill(255);
+  stroke(0);
+  rect(20, 20, 120, 40);
+  fill(0);
+  textAlign(CENTER, CENTER);
+  text("Dart Monkey", 80, 40);
+
+  fill(255);
+  stroke(0);
+  rect(20, 70, 120, 40);
+  fill(0);
+  text("Sniper Monkey", 80, 90);
+
+  fill(50, 50, 255, 100);
+  textSize(14);
+  text("Click to choose a monkey", width/2, height - 30);
+}
+boolean isOnPath(PVector pos) {
+  for (PVector p : parameterize()) {
+    if (PVector.dist(p, pos) < 20) {
+      return true;
+    }
+  }
+  return false;
+}
+
+boolean isOverlapping(PVector pos) {
+  for (Monkey m : monkeys) {
+    if (PVector.dist(pos, m.position) < 40) {
+      return true;
+    }
+  }
+  return false;
 }

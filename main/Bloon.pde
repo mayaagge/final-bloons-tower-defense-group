@@ -12,6 +12,7 @@ class Bloon{
   Bloon(ArrayList<PVector> path, float offset, BloonType type) {
     this.path = path;
     this.type = type;
+
     this.health = type.health;
     this.position = path.get(0).copy().add(offset, 0);
   }

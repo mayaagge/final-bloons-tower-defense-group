@@ -23,4 +23,19 @@ void drawPath(){
     rect(pos.x, pos.y, 20, 5);
   }
 }
+ArrayList<PVector> parameterize() {
+  ArrayList<PVector> parameters = new ArrayList<>();
+  for (int i = 0; i < path.size() - 1; i++) {
+    PVector start = path.get(i).copy();
+    PVector end = path.get(i + 1).copy();
+    PVector distanceVector = PVector.sub(end, start);
+    float distanceScalar = distanceVector.mag();
+    for (float j = 0; j < distanceScalar; j += 5) {
+      PVector point = PVector.add(start, PVector.mult(distanceVector.copy().normalize(), j));
+      parameters.add(point);
+    }
+  }
+  return parameters;
+}
+
   
