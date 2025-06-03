@@ -13,7 +13,7 @@ String selectedMonkeyType = null;
 boolean selectingMonkey = false;
 PImage dartMonkey;
 PImage sniperMonkey;
-
+int outOfMoney;
 ArrayList<Projectile> projectiles;
 void setup() {
   size(1080, 720);
@@ -88,15 +88,25 @@ void mousePressed() {
         monkeys.add(draggedmonkeytemporarything);
       draggedmonkeytemporarything = null;
       selectedMonkeyType = null;
-      }     
+      }
+      else{
+        outOfMoney = 30;
+        draggedmonkeytemporarything = null;
+      selectedMonkeyType = null;
+      }
   }
-  if(draggedmonkeytemporarything.getType().equals("Sniper")){
+  else if(draggedmonkeytemporarything.getType().equals("Sniper")){
       if(myGame.getMoney() >= 300){
         myGame.setMoney(myGame.getMoney() - 300);
         monkeys.add(draggedmonkeytemporarything);
       draggedmonkeytemporarything = null;
       selectedMonkeyType = null;
-      }     
+      }
+      else{
+      outOfMoney = 30;
+      draggedmonkeytemporarything = null;
+      selectedMonkeyType = null;
+      }
   }
 }
 }
@@ -173,7 +183,18 @@ void drawLives() {
 }
 
 void drawMoney() {
+  if(outOfMoney > 0){
+    if(outOfMoney % 2 == 0){
+      fill(255, 0, 0);
+    }
+    else{
+    fill(0);
+    }
+    outOfMoney--;
+  }
+  else{
   fill(0);
+  }
   textSize(24);
   textAlign(RIGHT, TOP);
   text("Money: " + myGame.getMoney(), width - 200, 20);

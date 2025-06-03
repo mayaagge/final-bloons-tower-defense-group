@@ -51,6 +51,7 @@ int getPopTime(){
 }
 
 void popped() {
+  myGame.setMoney(myGame.getMoney()+reward);
   pop = true;
   poptime = 1;
 }
