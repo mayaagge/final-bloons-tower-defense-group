@@ -1,7 +1,8 @@
 class Monkey {
   PVector position;
-  float range;
-  int cooldown, timer = 0;
+  float range = 200;
+  int cooldown = 11, timer = 0;
+
   PImage img;
   String type;
   float projectileSpeed;
