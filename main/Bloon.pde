@@ -1,69 +1,82 @@
-class Bloon {
+class Bloon{
   PImage explodeImage = loadImage("BloonExplode.png");
-  PImage redBloon = loadImage("BloonRed.png");
+  BloonType type;
   ArrayList<PVector> path;
   int pathIndex = 0;
   PVector position;
-  float speed;
-  int health, reward, damage;
-  String type;
-  boolean pop = false;
+  int health;
+  boolean popped = false;
   int poptime = 0;
+  boolean reachedEnd = false;
   
-  Bloon(ArrayList<PVector> path, int index, float offset, String type) {
+  Bloon(ArrayList<PVector> path, float offset, BloonType type) {
     this.path = path;
     this.type = type;
-    this.pathIndex = index;
-    position = path.get(0).copy().add(offset, 0);
-    if (type.equals("red")) {
-      speed = 10;
-      health = 1;
-      reward = 1;
-      damage = 1;
-    } else {
-      speed = 2.0;
-      health = 2;
-      reward = 2;
-      damage = 2;
-    }
+
+    this.health = type.health;
+    this.position = path.get(0).copy().add(offset, 0);
   }
   
+  Bloon(ArrayList<PVector> path, PVector position, BloonType type) {
+    this.path = path;
+    this.type = type;
+    this.health = type.health;
+    this.position = position.copy();
+}
   
-  void update() {
+  
+void update() {
+  if (popped) {
+    poptime++;
+    return;
+  }
   if (pathIndex < path.size() - 1) {
     PVector target = path.get(pathIndex + 1);
-    PVector direction = target.copy();
-    direction.sub(position);
-    direction.normalize();
-    direction.mult(speed);    
+    PVector direction = PVector.sub(target, position).normalize().mult(type.speed);
     position.add(direction);
-    if (position.dist(target) < speed) {
+    if (position.dist(target) < type.speed) {
       pathIndex++;
     }
   }
-  if(poptime >= 1){
-    poptime++;
-  }
+  else {
+      reachedEnd = true;
+      poptime = 1;
+      myGame.setLives(myGame.getLives() - type.damage);
+    }
 }
 
 int getPopTime(){
   return poptime;
 }
 
-void popped() {
-  pop = true;
+void pop(ArrayList<Bloon> newBloons) {
+  popped = true;
   poptime = 1;
+  
+  if (type.childType != null || type.childType.equals("")) {
+      BloonType child = main.gimmeTheDamnBloonType(type.childType);
+      if (child != null) {
+        newBloons.add(new Bloon(path, position.copy(), child));
+      }
+    }
 }
 
 
-void display() {
-  if (pathIndex == path.size() - 1 || pop == true) {
-    image(explodeImage, position.x - 40, position.y - 40, 100, 100);
-    poptime = 2;
-    if(pathIndex == path.size() - 1) {
-      myGame.setLives(myGame.getLives() - health);
+
+void lowerHealth(int n, ArrayList<Bloon> newBloons) {
+  if (popped || reachedEnd) return;
+
+    health -= n;
+    if (health <= 0) {
+      pop(newBloons);
     }
-  } else {
-    image(redBloon, position.x - 40, position.y - 40, 100, 100);
-  }}
+}
+
+void display() {
+  if (popped || reachedEnd) {
+      image(explodeImage, position.x - 40, position.y - 40, 100, 100);
+    } else {
+      image(type.image, position.x - 40, position.y - 40, 100, 100);
+    }
+  }
 }

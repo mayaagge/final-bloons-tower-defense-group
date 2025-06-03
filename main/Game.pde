@@ -37,4 +37,18 @@ void setMode(int Mode){
 int getGameMode(){
   return gameMode;
 }
+
+void drawLives() {
+  fill(0);
+  textSize(24);
+  textAlign(RIGHT, TOP);
+  text("Lives: " + lives, width - 20, 20);
+}
+
+void drawMoney() {
+  fill(0);
+  textSize(24);
+  textAlign(RIGHT, TOP);
+  text("Moneys: " + money, width - 200, 20);
+}
 }
