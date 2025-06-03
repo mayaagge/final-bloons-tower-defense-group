@@ -28,6 +28,7 @@ class Bloon{
 void update() {
   if (popped) {
     poptime++;
+    myGame.setMoney(myGame.getMoney() + 1);
     return;
   }
   if (pathIndex < path.size() - 1) {

@@ -40,9 +40,9 @@ class Monkey {
         PVector bloonVel = new PVector(0, 0);
         if (b.pathIndex < b.path.size() - 1) {
           PVector nextTarget = b.path.get(b.pathIndex + 1).copy();
-          bloonVel = PVector.sub(nextTarget, b.position).normalize().mult(b.speed);
+          bloonVel = PVector.sub(nextTarget, b.position).normalize().mult(b.type.speed);
         }
-        PVector futurePos = PVector.add(b.position, PVector.mult(bloonVel, 10));
+        PVector futurePos = PVector.add(b.position, PVector.mult(bloonVel, position.dist(b.position) / (projectileSpeed * 2)));
         PVector vel = PVector.sub(futurePos, position).normalize().mult(projectileSpeed);
         projectiles.add(new Projectile(position.copy(), vel, 10, 1, 25));
         timer = cooldown;
