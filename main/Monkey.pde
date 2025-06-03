@@ -7,6 +7,7 @@ class Monkey {
   String type;
   float projectileSpeed;
   int pierce;
+  int cost;
 
   Monkey(PImage img, float x, float y, String type) {
     this.img = img;
@@ -17,14 +18,16 @@ class Monkey {
   void setStats(){
     if (type.equals("Dart")) {
       range = 200;
-      cooldown = 30;
+      cooldown = 20;
       pierce = 1;
-      projectileSpeed = 5;
+      projectileSpeed = 15;
+      cost = 200;
     } else if (type.equals("Sniper")) {
-      range = 300;
-      cooldown = 90;
+      range = 2000;
+      cooldown = 40;
       pierce = 2;
-      projectileSpeed = 10;
+      projectileSpeed = 30;
+      cost = 300;
     }
   }
   void update(ArrayList<Bloon> bloons, ArrayList<Projectile> projectiles) {
@@ -37,9 +40,9 @@ class Monkey {
         PVector bloonVel = new PVector(0, 0);
         if (b.pathIndex < b.path.size() - 1) {
           PVector nextTarget = b.path.get(b.pathIndex + 1).copy();
-          bloonVel = PVector.sub(nextTarget, b.position).normalize().mult(b.speed);
+          bloonVel = PVector.sub(nextTarget, b.position).normalize().mult(b.type.speed);
         }
-        PVector futurePos = PVector.add(b.position, PVector.mult(bloonVel, 10));
+        PVector futurePos = PVector.add(b.position, PVector.mult(bloonVel, position.dist(b.position) / (projectileSpeed * 2)));
         PVector vel = PVector.sub(futurePos, position).normalize().mult(projectileSpeed);
         projectiles.add(new Projectile(position.copy(), vel, 10, 1, 25));
         timer = cooldown;
@@ -60,9 +63,15 @@ class Monkey {
       }
     }
     noFill();
+    if(type.equals("Sniper")){
+      ellipse(position.x,position.y, 50, 50);
+    }else{
     ellipse(position.x, position.y, range * 2, range * 2);
+    }
   }
-
+String getType(){
+  return type;
+}
   void setPosition(float x, float y) {
     position.set(x, y);
   }
