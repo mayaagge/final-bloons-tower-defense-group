@@ -81,10 +81,25 @@ void mousePressed() {
     }
 
     draggedmonkeytemporarything.setPosition(mouseX, mouseY);
-    monkeys.add(draggedmonkeytemporarything);
-    draggedmonkeytemporarything = null;
-    selectedMonkeyType = null;
+    if(draggedmonkeytemporarything.getType() != null){
+    if(draggedmonkeytemporarything.getType().equals("Dart")){
+      if(myGame.getMoney() >= 200){
+        myGame.setMoney(myGame.getMoney() - 200);
+        monkeys.add(draggedmonkeytemporarything);
+      draggedmonkeytemporarything = null;
+      selectedMonkeyType = null;
+      }     
   }
+  if(draggedmonkeytemporarything.getType().equals("Sniper")){
+      if(myGame.getMoney() >= 300){
+        myGame.setMoney(myGame.getMoney() - 300);
+        monkeys.add(draggedmonkeytemporarything);
+      draggedmonkeytemporarything = null;
+      selectedMonkeyType = null;
+      }     
+  }
+}
+}
 }
 
 
@@ -161,7 +176,7 @@ void drawMoney() {
   fill(0);
   textSize(24);
   textAlign(RIGHT, TOP);
-  text("Moneys: " + myGame.getMoney(), width - 200, 20);
+  text("Money: " + myGame.getMoney(), width - 200, 20);
 }
 
 void drawMonkeySelectionUI() {
