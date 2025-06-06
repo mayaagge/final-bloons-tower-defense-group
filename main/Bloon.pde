@@ -17,8 +17,9 @@ class Bloon{
     this.position = path.get(0).copy().add(offset, 0);
   }
   
-  Bloon(ArrayList<PVector> path, PVector position, BloonType type) {
+  Bloon(ArrayList<PVector> path, PVector position, BloonType type, int pathIndex) {
     this.path = path;
+    this.pathIndex = pathIndex;
     this.type = type;
     this.health = type.health;
     this.position = position.copy();
@@ -28,6 +29,7 @@ class Bloon{
 void update() {
   if (popped) {
     poptime++;
+    myGame.setMoney(myGame.getMoney() + 1);
     return;
   }
   if (pathIndex < path.size() - 1) {
@@ -56,7 +58,7 @@ void pop(ArrayList<Bloon> newBloons) {
   if (type.childType != null || type.childType.equals("")) {
       BloonType child = main.gimmeTheDamnBloonType(type.childType);
       if (child != null) {
-        newBloons.add(new Bloon(path, position.copy(), child));
+        newBloons.add(new Bloon(path, position.copy(), child, pathIndex));
       }
     }
 }
