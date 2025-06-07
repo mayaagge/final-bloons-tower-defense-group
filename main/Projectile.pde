@@ -4,28 +4,30 @@ class Projectile {
   int pierce;
   int attkRadius;
 
-  Projectile(PVector pos, PVector vel, int level, int pierce, int attkRadius) {
+  Projectile(PVector pos, PVector vel, int damage, int pierce, int attkRadius) {
     position = pos;
     velocity = vel;
-    damage = level;
+    this.damage = damage;
     this.pierce = pierce;
     this.attkRadius = attkRadius;
   }
 
   void update(ArrayList<Bloon> newBloons) {
-  position.add(velocity);
-  for (Bloon b : bloons) {
-    if (position.dist(b.position) < attkRadius) {
-      b.lowerHealth(1, newBloons);
-      pierce--;
+    position.add(velocity);
+    for (int i = 0; i < bloons.size(); i++) {
+      Bloon b = bloons.get(i);
+      if (!b.popped && !b.reachedEnd && position.dist(b.position) < attkRadius) {
+        b.lowerHealth(damage, newBloons);
+        pierce--;
+        if (pierce <= 0) break;
       }
     }
-  }  
-  
-  int getPierce(){
+  }
+
+  int getPierce() {
     return pierce;
   }
-  
+
   void display() {
     pushMatrix();
     translate(position.x, position.y);
@@ -38,9 +40,5 @@ class Projectile {
     fill(150, 0, 0);
     triangle(0, -3, -3, 0, 0, 3);
     popMatrix();
-  }
-  
-  boolean hits(Bloon b) {
-    return position.dist(b.position) < attkRadius;
   }
 }
