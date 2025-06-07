@@ -66,6 +66,10 @@ void lowerHealth(int n, ArrayList<Bloon> newBloons) {
   }
 }
 
+
+
+
+
   void display() {
     if (popped || reachedEnd) {
       image(explodeImage, position.x - 40, position.y - 40, 100, 100);
