@@ -188,8 +188,9 @@ void draw() {
       projectiles.remove(i);
     }
   }
-  bloons.addAll(newBloons);
   
+  bloons.addAll(newBloons);
+  sortBloonsByProgress(bloons);
   for (Monkey m : monkeys) {
     m.update(bloons, projectiles);
     m.display();
@@ -264,3 +265,15 @@ boolean isOverlapping(PVector pos) {
   }
   return false;
 }
+void sortBloonsByProgress(ArrayList<Bloon> bloonList) {
+  for (int i = 0; i < bloonList.size(); i++) {
+    for (int j = i + 1; j < bloonList.size(); j++) {
+      if (bloonList.get(j).getProgress() > bloonList.get(i).getProgress()) {
+        Bloon temp = bloonList.get(i);
+        bloonList.set(i, bloonList.get(j));
+        bloonList.set(j, temp);
+      }
+    }
+  }
+}
+
