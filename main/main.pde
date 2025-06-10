@@ -17,34 +17,45 @@ PImage sniperMonkey;
 int outOfMoney;
 ArrayList<Projectile> projectiles;
 ArrayList<Round> round;
+RoundProgress RoundProgress;
 
 void setup() {
   size(1080, 720);
   
  //IMAGESSS
-  mapBackground = loadImage("MonkeyMeadow.png");
-  STARTSCREEN = loadImage("STARTSCREEN.png");
-  LOSESCREEN = loadImage("LOSESCREEN.jpg");
+  mapBackground = loadImage("images/MonkeyMeadow.png");
+  STARTSCREEN = loadImage("images/STARTSCREEN.png");
+  LOSESCREEN = loadImage("images/LOSESCREEN.jpg");
   
 
-  dartMonkey = loadImage("dartMonkey.png");
-  sniperMonkey = loadImage("sniperMonkey.png");
+  dartMonkey = loadImage("images/dartMonkey.png");
+  sniperMonkey = loadImage("images/sniperMonkey.png");
   
   monkeys = new ArrayList<Monkey>();
-  //monkeyImage = loadImage("Monkey.png");
+  //monkeyImage = loadImage("images/Monkey.png");
   makePath();
   
   //BLOONS SETUP
-  PImage redImg = loadImage("BloonRed.png");
-  PImage blueImg = loadImage("BloonBlue.png");
+  PImage redImg = loadImage("images/BloonRed.png");
+  PImage blueImg = loadImage("images/BloonBlue.png");
+  PImage greenImg = loadImage("images/BloonGreen.png");
+  PImage yellowImg = loadImage("images/BloonYellow.png");
+  PImage pinkImg = loadImage("images/BloonPink.png");
+
   allBloonTypes.add(new BloonType("red", redImg, 4.5, 1, 1, 1, ""));
   allBloonTypes.add(new BloonType("blue", blueImg, 2.5, 2, 2, 1, "red"));
+  allBloonTypes.add(new BloonType("green", greenImg, 3.0, 3, 3, 1, "blue"));
+  allBloonTypes.add(new BloonType("yellow", yellowImg, 3.5, 5, 4, 1, "green"));
+  allBloonTypes.add(new BloonType("pink", pinkImg, 4.5, 5, 5, 1, "green"));
   
   //PROJ
   projectiles = new ArrayList<Projectile>();
   projectiles.add(new Projectile(new PVector(width/2, height/2), new PVector(2, 0), 10, 1, 25));
   myGame = new Game();
   myGame.setGameState(true);
+  
+  //ROUND
+  RoundProgress = new RoundProgress(path);
 }
 
 static BloonType gimmeTheDamnBloonType(String name) {
@@ -62,10 +73,27 @@ void keyPressed() {
     return;
   }
   
+  if (key == 'w' || key == 'W') {
+    RoundProgress.startNextWave();
+  }
+  
   if (key == 'a') {
     BloonType blueType = gimmeTheDamnBloonType("blue");
     bloons.add(new Bloon(path, 0, blueType));
   }
+  if (key == 's') {
+    BloonType greenType = gimmeTheDamnBloonType("green");
+    bloons.add(new Bloon(path, 0, greenType));
+  }
+  if (key == 'd') {
+    BloonType yellowType = gimmeTheDamnBloonType("yellow");
+    bloons.add(new Bloon(path, 0, yellowType));
+  }
+  if (key == 'f') {
+    BloonType pinkType = gimmeTheDamnBloonType("pink");
+    bloons.add(new Bloon(path, 0, pinkType));
+}
+
   if (key == 'm' || key == 'M') {
     selectingMonkey = true;
     selectedMonkeyType = null;
@@ -276,4 +304,3 @@ void sortBloonsByProgress(ArrayList<Bloon> bloonList) {
     }
   }
 }
-
