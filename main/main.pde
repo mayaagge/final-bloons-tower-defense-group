@@ -45,10 +45,10 @@ void setup() {
   PImage pinkImg = loadImage("images/BloonPink.png");
 
   allBloonTypes.add(new BloonType("red", redImg, 4.5, 1, 10, 1, ""));
-  allBloonTypes.add(new BloonType("blue", blueImg, 2.5, 2, 20, 1, "red"));
-  allBloonTypes.add(new BloonType("green", greenImg, 3.0, 4, 30, 1, "blue"));
-  allBloonTypes.add(new BloonType("yellow", yellowImg, 3.5, 8, 100, 1, "green"));
-  allBloonTypes.add(new BloonType("pink", pinkImg, 4.5, 5, 5, 50, "green"));
+  allBloonTypes.add(new BloonType("blue", blueImg, 2.5, 2, 10, 1, "red"));
+  allBloonTypes.add(new BloonType("green", greenImg, 3.0, 4, 20, 1, "blue"));
+  allBloonTypes.add(new BloonType("yellow", yellowImg, 3.5, 8, 40, 1, "green"));
+  allBloonTypes.add(new BloonType("pink", pinkImg, 4.5, 5, 6, 30, "green"));
   
   //PROJ
   projectiles = new ArrayList<Projectile>();
