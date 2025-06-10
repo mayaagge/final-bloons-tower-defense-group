@@ -18,6 +18,8 @@ int outOfMoney;
 ArrayList<Projectile> projectiles;
 ArrayList<Round> round;
 RoundProgress RoundProgress;
+Round currRound = null;
+int currroundInd = -1;
 
 void setup() {
   size(1080, 720);
@@ -42,11 +44,11 @@ void setup() {
   PImage yellowImg = loadImage("images/BloonYellow.png");
   PImage pinkImg = loadImage("images/BloonPink.png");
 
-  allBloonTypes.add(new BloonType("red", redImg, 4.5, 1, 1, 1, ""));
-  allBloonTypes.add(new BloonType("blue", blueImg, 2.5, 2, 2, 1, "red"));
-  allBloonTypes.add(new BloonType("green", greenImg, 3.0, 3, 3, 1, "blue"));
-  allBloonTypes.add(new BloonType("yellow", yellowImg, 3.5, 5, 4, 1, "green"));
-  allBloonTypes.add(new BloonType("pink", pinkImg, 4.5, 5, 5, 1, "green"));
+  allBloonTypes.add(new BloonType("red", redImg, 4.5, 1, 20, 1, ""));
+  allBloonTypes.add(new BloonType("blue", blueImg, 2.5, 2, 30, 1, "red"));
+  allBloonTypes.add(new BloonType("green", greenImg, 3.0, 3, 50, 1, "blue"));
+  allBloonTypes.add(new BloonType("yellow", yellowImg, 3.5, 5, 200, 1, "green"));
+  allBloonTypes.add(new BloonType("pink", pinkImg, 4.5, 5, 5, 100, "green"));
   
   //PROJ
   projectiles = new ArrayList<Projectile>();
@@ -74,9 +76,15 @@ void keyPressed() {
   }
   
   if (key == 'w' || key == 'W') {
-    RoundProgress.startNextWave();
+    if (currRound == null || currRound.isFinished() && bloons.isEmpty()) {
+      currroundInd++;
+      if (currroundInd < RoundProgress.rounds.size()) {
+        currRound = RoundProgress.rounds.get(currroundInd);
+      }
+    }
   }
   
+  /*
   if (key == 'a') {
     BloonType blueType = gimmeTheDamnBloonType("blue");
     bloons.add(new Bloon(path, 0, blueType));
@@ -92,8 +100,8 @@ void keyPressed() {
   if (key == 'f') {
     BloonType pinkType = gimmeTheDamnBloonType("pink");
     bloons.add(new Bloon(path, 0, pinkType));
-}
-
+  }
+  */
   if (key == 'm' || key == 'M') {
     selectingMonkey = true;
     selectedMonkeyType = null;
@@ -131,33 +139,33 @@ void mousePressed() {
 
     draggedmonkeytemporarything.setPosition(mouseX, mouseY);
     if(draggedmonkeytemporarything.getType() != null){
-    if(draggedmonkeytemporarything.getType().equals("Dart")){
-      if(myGame.getMoney() >= 200){
-        myGame.setMoney(myGame.getMoney() - 200);
+      if(draggedmonkeytemporarything.getType().equals("Dart")){
+        if(myGame.getMoney() >= 200){
+          myGame.setMoney(myGame.getMoney() - 200);
+          monkeys.add(draggedmonkeytemporarything);
+          draggedmonkeytemporarything = null;
+          selectedMonkeyType = null;
+        }
+        else{
+          outOfMoney = 30;
+          draggedmonkeytemporarything = null;
+          selectedMonkeyType = null;
+        }
+    }
+    else if(draggedmonkeytemporarything.getType().equals("Sniper")){
+      if(myGame.getMoney() >= 300){
+        myGame.setMoney(myGame.getMoney() - 300);
         monkeys.add(draggedmonkeytemporarything);
-      draggedmonkeytemporarything = null;
-      selectedMonkeyType = null;
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
       }
       else{
         outOfMoney = 30;
         draggedmonkeytemporarything = null;
-      selectedMonkeyType = null;
+        selectedMonkeyType = null;
       }
+    }
   }
-  else if(draggedmonkeytemporarything.getType().equals("Sniper")){
-      if(myGame.getMoney() >= 300){
-        myGame.setMoney(myGame.getMoney() - 300);
-        monkeys.add(draggedmonkeytemporarything);
-      draggedmonkeytemporarything = null;
-      selectedMonkeyType = null;
-      }
-      else{
-      outOfMoney = 30;
-      draggedmonkeytemporarything = null;
-      selectedMonkeyType = null;
-      }
-  }
-}
 }
 }
 
@@ -189,9 +197,9 @@ void draw() {
   //ArrayList<Bloon> r1 = new ArrayList<>;
   //round.add(new Round(
   
-  
-  
-  
+  if (currRound != null) {
+    currRound.updateSpawn(bloons, path);
+  }
   
   for (int i = bloons.size() - 1; i >= 0; i--) {
     Bloon b = bloons.get(i);
