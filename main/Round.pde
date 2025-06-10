@@ -1,10 +1,10 @@
 class Round {
   int roundNum;
   ArrayList<BloonType> types;
-  ArrayList<Integer> counts;  // how many of each bloon type left to spawn
+  ArrayList<Integer> counts;
   int currtype = 0;
   int timer = 0;
-  int delay = 30;
+  int delay = 15;
   
 
   Round(int roundNum, ArrayList<BloonType> types, ArrayList<Integer> counts) {
@@ -23,7 +23,7 @@ class Round {
     return true;
   }
   
-    void updateSpawn(ArrayList<Bloon> gameBloons, ArrayList<PVector> path) {
+  void updateSpawn(ArrayList<Bloon> gameBloons, ArrayList<PVector> path) {
     timer++;
     if (timer >= delay) {
       timer = 0;
