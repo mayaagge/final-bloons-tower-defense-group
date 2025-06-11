@@ -14,6 +14,9 @@ String selectedMonkeyType = null;
 boolean selectingMonkey = false;
 PImage dartMonkey;
 PImage sniperMonkey;
+PImage engineerMonkey;
+PImage wizardMonkey;
+PImage dartlingMonkey;
 int outOfMoney;
 ArrayList<Projectile> projectiles;
 ArrayList<Round> round;
@@ -33,6 +36,9 @@ void setup() {
 
   dartMonkey = loadImage("images/dartMonkey.png");
   sniperMonkey = loadImage("images/sniperMonkey.png");
+  engineerMonkey = loadImage("images/Engineer.png");
+  wizardMonkey = loadImage("images/Wizard.png");
+  dartlingMonkey = loadImage("images/Dartling.png");
   
   monkeys = new ArrayList<Monkey>();
   //monkeyImage = loadImage("images/Monkey.png");
@@ -108,6 +114,9 @@ void keyPressed() {
     selectedMonkeyType = null;
     draggedmonkeytemporarything = null;
   }
+  if (key == 'l' || key == 'L'){
+    frameRate(120);
+  }
 }
 
 void mousePressed() {
@@ -120,6 +129,21 @@ void mousePressed() {
     } else if (mouseY > 70 && mouseY < 110 && mouseX > 20 && mouseX < 140) {
       selectedMonkeyType = "Sniper";
       draggedmonkeytemporarything = new Monkey(sniperMonkey, mouseX, mouseY, "Sniper");
+      selectingMonkey = false;
+      return;
+    } else if(mouseY > 120 && mouseY < 160 && mouseX > 20 && mouseX < 140) {
+      selectedMonkeyType = "Engineer";
+      draggedmonkeytemporarything = new Monkey(engineerMonkey, mouseX, mouseY, "Engineer");
+      selectingMonkey = false;
+      return;
+    } else if(mouseY > 170 && mouseY < 210 && mouseX > 20 && mouseX < 140) {
+      selectedMonkeyType = "Wizard";
+      draggedmonkeytemporarything = new Monkey(wizardMonkey, mouseX, mouseY, "Wizard");
+      selectingMonkey = false;
+      return;
+    }else if(mouseY > 220 && mouseY < 260 && mouseX > 20 && mouseX < 140) {
+      selectedMonkeyType = "Dartling";
+      draggedmonkeytemporarything = new Monkey(dartlingMonkey, mouseX, mouseY, "Dartling");
       selectingMonkey = false;
       return;
     }
@@ -156,6 +180,43 @@ void mousePressed() {
     else if(draggedmonkeytemporarything.getType().equals("Sniper")){
       if(myGame.getMoney() >= 300){
         myGame.setMoney(myGame.getMoney() - 300);
+        monkeys.add(draggedmonkeytemporarything);
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+      else{
+        outOfMoney = 30;
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+    }
+    else if(draggedmonkeytemporarything.getType().equals("Engineer")){
+      if(myGame.getMoney() >= 600){
+        myGame.setMoney(myGame.getMoney() - 600);
+        monkeys.add(draggedmonkeytemporarything);
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+      else{
+        outOfMoney = 30;
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+    } else if(draggedmonkeytemporarything.getType().equals("Wizard")){
+      if(myGame.getMoney() >= 800){
+        myGame.setMoney(myGame.getMoney() - 800);
+        monkeys.add(draggedmonkeytemporarything);
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+      else{
+        outOfMoney = 30;
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+    } else if(draggedmonkeytemporarything.getType().equals("Dartling")){
+      if(myGame.getMoney() >= 800){
+        myGame.setMoney(myGame.getMoney() - 800);
         monkeys.add(draggedmonkeytemporarything);
         draggedmonkeytemporarything = null;
         selectedMonkeyType = null;
@@ -236,7 +297,7 @@ void draw() {
       proj.update(newBloons);
       proj.display();
     }
-    if (proj.position.y >= 700) {
+    if (proj.position.y >= 720 || proj.position.y < 0 || proj.position.x < 0 || proj.position.x >= 1080) {
       projectiles.remove(i);
     }
   }
@@ -294,16 +355,33 @@ void drawMonkeySelectionUI() {
   fill(255);
   stroke(0);
   rect(20, 20, 120, 40);
+  textSize(12);
   fill(0);
   textAlign(CENTER, CENTER);
-  text("Dart Monkey", 80, 40);
+  text("Dart Monkey - 200$", 80, 40);
 
   fill(255);
   stroke(0);
   rect(20, 70, 120, 40);
   fill(0);
-  text("Sniper Monkey", 80, 90);
-
+  text("Sniper Monkey - 300$", 80, 90);
+  
+  fill(255);
+  stroke(0);
+  rect(20, 120, 120, 40);
+  fill(0);
+  text("Monkey Engineer - 600$", 80, 140);
+  
+  fill(255);
+  stroke(0);
+  rect(20, 170, 120, 40);
+  fill(0);
+  text("Wizard Monkey - 800$", 80, 190);
+  fill(255);
+  stroke(0);
+  rect(20, 220, 120, 40);
+  fill(0);
+  text("Dartling Gunner - 800$", 80, 240);
   fill(50, 50, 255, 100);
   textSize(14);
   text("Click to choose a monkey", width/2, height - 30);
