@@ -28,7 +28,7 @@ class Monkey {
     } else if (type.equals("Sniper")) {
       range = 2000;
       cooldown = 60;
-      pierce = 2;
+      pierce = 3;
       damage = 1;
       projectileSpeed = 30;
       cost = 300;
