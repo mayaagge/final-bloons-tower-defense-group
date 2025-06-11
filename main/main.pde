@@ -112,6 +112,9 @@ void keyPressed() {
     selectedMonkeyType = null;
     draggedmonkeytemporarything = null;
   }
+  if (key == 'l' || key == 'L'){
+    frameRate(120);
+  }
 }
 
 void mousePressed() {
@@ -333,28 +336,28 @@ void drawMonkeySelectionUI() {
   fill(255);
   stroke(0);
   rect(20, 20, 120, 40);
-  textSize(15);
+  textSize(12);
   fill(0);
   textAlign(CENTER, CENTER);
-  text("Dart Monkey", 80, 40);
+  text("Dart Monkey - 200$", 80, 40);
 
   fill(255);
   stroke(0);
   rect(20, 70, 120, 40);
   fill(0);
-  text("Sniper Monkey", 80, 90);
+  text("Sniper Monkey - 300$", 80, 90);
   
   fill(255);
   stroke(0);
   rect(20, 120, 120, 40);
   fill(0);
-  text("Monkey Engineer", 80, 140);
+  text("Monkey Engineer - 600$", 80, 140);
   
   fill(255);
   stroke(0);
   rect(20, 170, 120, 40);
   fill(0);
-  text("Wizard Monkey", 80, 190);
+  text("Wizard Monkey - 800$", 80, 190);
   fill(50, 50, 255, 100);
   textSize(14);
   text("Click to choose a monkey", width/2, height - 30);
