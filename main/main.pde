@@ -17,34 +17,48 @@ PImage sniperMonkey;
 int outOfMoney;
 ArrayList<Projectile> projectiles;
 ArrayList<Round> round;
+RoundProgress RoundProgress;
+Round currRound = null;
+int currroundInd = -1;
+int roundMessageTimer = 0;
 
 void setup() {
   size(1080, 720);
   
  //IMAGESSS
-  mapBackground = loadImage("MonkeyMeadow.png");
-  STARTSCREEN = loadImage("STARTSCREEN.png");
-  LOSESCREEN = loadImage("LOSESCREEN.jpg");
+  mapBackground = loadImage("images/MonkeyMeadow.png");
+  STARTSCREEN = loadImage("images/STARTSCREEN.png");
+  LOSESCREEN = loadImage("images/LOSESCREEN.jpg");
   
 
-  dartMonkey = loadImage("dartMonkey.png");
-  sniperMonkey = loadImage("sniperMonkey.png");
+  dartMonkey = loadImage("images/dartMonkey.png");
+  sniperMonkey = loadImage("images/sniperMonkey.png");
   
   monkeys = new ArrayList<Monkey>();
-  //monkeyImage = loadImage("Monkey.png");
+  //monkeyImage = loadImage("images/Monkey.png");
   makePath();
   
   //BLOONS SETUP
-  PImage redImg = loadImage("BloonRed.png");
-  PImage blueImg = loadImage("BloonBlue.png");
-  allBloonTypes.add(new BloonType("red", redImg, 4.5, 1, 1, 1, ""));
-  allBloonTypes.add(new BloonType("blue", blueImg, 2.5, 2, 2, 1, "red"));
+  PImage redImg = loadImage("images/BloonRed.png");
+  PImage blueImg = loadImage("images/BloonBlue.png");
+  PImage greenImg = loadImage("images/BloonGreen.png");
+  PImage yellowImg = loadImage("images/BloonYellow.png");
+  PImage pinkImg = loadImage("images/BloonPink.png");
+
+  allBloonTypes.add(new BloonType("red", redImg, 4.5, 1, 10, 1, ""));
+  allBloonTypes.add(new BloonType("blue", blueImg, 2.5, 2, 15, 1, "red"));
+  allBloonTypes.add(new BloonType("green", greenImg, 3.0, 4, 20, 1, "blue"));
+  allBloonTypes.add(new BloonType("yellow", yellowImg, 3.5, 8, 40, 1, "green"));
+  allBloonTypes.add(new BloonType("pink", pinkImg, 4.5, 5, 6, 1, "green"));
   
   //PROJ
   projectiles = new ArrayList<Projectile>();
   projectiles.add(new Projectile(new PVector(width/2, height/2), new PVector(2, 0), 10, 1, 25));
   myGame = new Game();
   myGame.setGameState(true);
+  
+  //ROUND
+  RoundProgress = new RoundProgress(path);
 }
 
 static BloonType gimmeTheDamnBloonType(String name) {
@@ -61,11 +75,34 @@ void keyPressed() {
     gameStarted = true;
     return;
   }
+  /*
+  if (key == 'w' || key == 'W') {
+    if (currRound == null || currRound.isFinished() && bloons.isEmpty()) {
+      currroundInd++;
+      if (currroundInd < RoundProgress.rounds.size()) {
+        currRound = RoundProgress.rounds.get(currroundInd);
+      }
+    }
+  }
+  
   
   if (key == 'a') {
     BloonType blueType = gimmeTheDamnBloonType("blue");
     bloons.add(new Bloon(path, 0, blueType));
   }
+  if (key == 's') {
+    BloonType greenType = gimmeTheDamnBloonType("green");
+    bloons.add(new Bloon(path, 0, greenType));
+  }
+  if (key == 'd') {
+    BloonType yellowType = gimmeTheDamnBloonType("yellow");
+    bloons.add(new Bloon(path, 0, yellowType));
+  }
+  if (key == 'f') {
+    BloonType pinkType = gimmeTheDamnBloonType("pink");
+    bloons.add(new Bloon(path, 0, pinkType));
+  }
+  */
   if (key == 'm' || key == 'M') {
     selectingMonkey = true;
     selectedMonkeyType = null;
@@ -103,33 +140,33 @@ void mousePressed() {
 
     draggedmonkeytemporarything.setPosition(mouseX, mouseY);
     if(draggedmonkeytemporarything.getType() != null){
-    if(draggedmonkeytemporarything.getType().equals("Dart")){
-      if(myGame.getMoney() >= 200){
-        myGame.setMoney(myGame.getMoney() - 200);
+      if(draggedmonkeytemporarything.getType().equals("Dart")){
+        if(myGame.getMoney() >= 200){
+          myGame.setMoney(myGame.getMoney() - 200);
+          monkeys.add(draggedmonkeytemporarything);
+          draggedmonkeytemporarything = null;
+          selectedMonkeyType = null;
+        }
+        else{
+          outOfMoney = 30;
+          draggedmonkeytemporarything = null;
+          selectedMonkeyType = null;
+        }
+    }
+    else if(draggedmonkeytemporarything.getType().equals("Sniper")){
+      if(myGame.getMoney() >= 300){
+        myGame.setMoney(myGame.getMoney() - 300);
         monkeys.add(draggedmonkeytemporarything);
-      draggedmonkeytemporarything = null;
-      selectedMonkeyType = null;
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
       }
       else{
         outOfMoney = 30;
         draggedmonkeytemporarything = null;
-      selectedMonkeyType = null;
+        selectedMonkeyType = null;
       }
+    }
   }
-  else if(draggedmonkeytemporarything.getType().equals("Sniper")){
-      if(myGame.getMoney() >= 300){
-        myGame.setMoney(myGame.getMoney() - 300);
-        monkeys.add(draggedmonkeytemporarything);
-      draggedmonkeytemporarything = null;
-      selectedMonkeyType = null;
-      }
-      else{
-      outOfMoney = 30;
-      draggedmonkeytemporarything = null;
-      selectedMonkeyType = null;
-      }
-  }
-}
 }
 }
 
@@ -145,11 +182,6 @@ void draw() {
     text("Press any key to start", width/2, height/2);
     return;
   }
-  else if (myGame.getLives() <= 0) {
-      background(50);
-      image(LOSESCREEN, 0, 0, width, height);
-      return;
-  }
   
   ArrayList<Bloon> newBloons = new ArrayList<>();
   background(200);
@@ -160,10 +192,16 @@ void draw() {
   
   //ArrayList<Bloon> r1 = new ArrayList<>;
   //round.add(new Round(
-  
-  
-  
-  
+  if (roundMessageTimer > 0) {
+    fill(255, 255, 0);
+    textSize(32);
+    textAlign(CENTER, CENTER);
+    text("Starting Round " + (currroundInd + 1), width / 2, height / 2 - 100);
+    roundMessageTimer--;
+  }
+  if (currRound != null) {
+    currRound.updateSpawn(bloons, path);
+  }
   
   for (int i = bloons.size() - 1; i >= 0; i--) {
     Bloon b = bloons.get(i);
@@ -175,7 +213,21 @@ void draw() {
       b.display();
     }
   }
-  
+   if ((currRound == null || currRound.isFinished()) && bloons.isEmpty()) {
+    currroundInd++;
+    if (currroundInd < RoundProgress.rounds.size()) {
+      currRound = RoundProgress.rounds.get(currroundInd);
+      roundMessageTimer = 120; 
+    } else {
+      currRound = null;
+    }
+  }
+  if (myGame.getLives() <= 0) {
+    background(50);
+    image(LOSESCREEN, 0, 0, width, height);
+    return;
+  }
+
   for(int i = projectiles.size()-1; i>=0;i--){
     Projectile proj = projectiles.get(i);
     if (proj.getPierce() <= 0) {
@@ -188,8 +240,9 @@ void draw() {
       projectiles.remove(i);
     }
   }
-  bloons.addAll(newBloons);
   
+  bloons.addAll(newBloons);
+  sortBloonsByProgress(bloons);
   for (Monkey m : monkeys) {
     m.update(bloons, projectiles);
     m.display();
@@ -201,6 +254,14 @@ void draw() {
   }
   if (selectingMonkey) {
     drawMonkeySelectionUI();
+  }
+
+  if (outOfMoney > 0) {
+    fill(255, 0, 0);
+    textAlign(CENTER, CENTER);
+    textSize(26);
+    text("Not enough money!", width / 2, height - 60);
+    outOfMoney--;
   }
 }
 
@@ -263,4 +324,15 @@ boolean isOverlapping(PVector pos) {
     }
   }
   return false;
+}
+void sortBloonsByProgress(ArrayList<Bloon> bloonList) {
+  for (int i = 0; i < bloonList.size(); i++) {
+    for (int j = i + 1; j < bloonList.size(); j++) {
+      if (bloonList.get(j).getProgress() > bloonList.get(i).getProgress()) {
+        Bloon temp = bloonList.get(i);
+        bloonList.set(i, bloonList.get(j));
+        bloonList.set(j, temp);
+      }
+    }
+  }
 }
