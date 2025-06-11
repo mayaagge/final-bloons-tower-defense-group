@@ -59,7 +59,7 @@ class Bloon {
       if (position.dist(target) < speed) {
         pathIndex++;
       }
-    } else {
+    } else if (! reachedEnd) {
       reachedEnd = true;
       poptime = 1;
       myGame.setLives(myGame.getLives() - type.damage);

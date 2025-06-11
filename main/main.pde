@@ -20,6 +20,7 @@ ArrayList<Round> round;
 RoundProgress RoundProgress;
 Round currRound = null;
 int currroundInd = -1;
+int roundMessageTimer = 0;
 
 void setup() {
   size(1080, 720);
@@ -48,7 +49,7 @@ void setup() {
   allBloonTypes.add(new BloonType("blue", blueImg, 2.5, 2, 15, 1, "red"));
   allBloonTypes.add(new BloonType("green", greenImg, 3.0, 4, 20, 1, "blue"));
   allBloonTypes.add(new BloonType("yellow", yellowImg, 3.5, 8, 40, 1, "green"));
-  allBloonTypes.add(new BloonType("pink", pinkImg, 4.5, 5, 6, 30, "green"));
+  allBloonTypes.add(new BloonType("pink", pinkImg, 4.5, 5, 6, 1, "green"));
   
   //PROJ
   projectiles = new ArrayList<Projectile>();
@@ -74,7 +75,7 @@ void keyPressed() {
     gameStarted = true;
     return;
   }
-  
+  /*
   if (key == 'w' || key == 'W') {
     if (currRound == null || currRound.isFinished() && bloons.isEmpty()) {
       currroundInd++;
@@ -84,7 +85,7 @@ void keyPressed() {
     }
   }
   
-  /*
+  
   if (key == 'a') {
     BloonType blueType = gimmeTheDamnBloonType("blue");
     bloons.add(new Bloon(path, 0, blueType));
@@ -181,11 +182,6 @@ void draw() {
     text("Press any key to start", width/2, height/2);
     return;
   }
-  else if (myGame.getLives() <= 0) {
-      background(50);
-      image(LOSESCREEN, 0, 0, width, height);
-      return;
-  }
   
   ArrayList<Bloon> newBloons = new ArrayList<>();
   background(200);
@@ -196,7 +192,13 @@ void draw() {
   
   //ArrayList<Bloon> r1 = new ArrayList<>;
   //round.add(new Round(
-  
+  if (roundMessageTimer > 0) {
+    fill(255, 255, 0);
+    textSize(32);
+    textAlign(CENTER, CENTER);
+    text("Starting Round " + (currroundInd + 1), width / 2, height / 2 - 100);
+    roundMessageTimer--;
+  }
   if (currRound != null) {
     currRound.updateSpawn(bloons, path);
   }
@@ -211,7 +213,21 @@ void draw() {
       b.display();
     }
   }
-  
+   if ((currRound == null || currRound.isFinished()) && bloons.isEmpty()) {
+    currroundInd++;
+    if (currroundInd < RoundProgress.rounds.size()) {
+      currRound = RoundProgress.rounds.get(currroundInd);
+      roundMessageTimer = 120; 
+    } else {
+      currRound = null;
+    }
+  }
+  if (myGame.getLives() <= 0) {
+    background(50);
+    image(LOSESCREEN, 0, 0, width, height);
+    return;
+  }
+
   for(int i = projectiles.size()-1; i>=0;i--){
     Projectile proj = projectiles.get(i);
     if (proj.getPierce() <= 0) {
@@ -238,6 +254,14 @@ void draw() {
   }
   if (selectingMonkey) {
     drawMonkeySelectionUI();
+  }
+
+  if (outOfMoney > 0) {
+    fill(255, 0, 0);
+    textAlign(CENTER, CENTER);
+    textSize(26);
+    text("Not enough money!", width / 2, height - 60);
+    outOfMoney--;
   }
 }
 
