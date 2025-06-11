@@ -78,7 +78,6 @@ void lowerHealth(int n, ArrayList<Bloon> newBloons) {
 
   if (health <= 0) {
     popped = true;
-    poptime = 1;
     myGame.setMoney(myGame.getMoney() + type.reward);
 
     if (type.childType != null && !type.childType.equals("")) {
