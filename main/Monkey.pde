@@ -33,6 +33,22 @@ class Monkey {
       projectileSpeed = 30;
       cost = 300;
     }
+    if(type.equals("Engineer")){
+      range = 200;
+      cooldown = 40;
+      pierce = 1;
+      damage = 1;
+      projectileSpeed = 15;
+      cost = 600;
+    }
+    if(type.equals("Wizard")){
+      range = 200;
+      cooldown = 40;
+      pierce = 1;
+      damage = 1;
+      projectileSpeed = 15;
+      cost = 800;
+  }
   }
 void update(ArrayList<Bloon> bloons, ArrayList<Projectile> projectiles) {
   if (timer > 0) {
@@ -51,8 +67,14 @@ void update(ArrayList<Bloon> bloons, ArrayList<Projectile> projectiles) {
 
       PVector futurePos = PVector.add(b.position, PVector.mult(bloonVel, position.dist(b.position) / (projectileSpeed * 2)));
       PVector vel = PVector.sub(futurePos, position).normalize().mult(projectileSpeed);
-
+      if(type.equals("Wizard")){
+        for(int j = 0; j > bloons.size()-1; j++){
+          projectiles.add(new Projectile(bloons.get(j).position, vel, damage, pierce, 25));
+      }
+      }
+      else{
       projectiles.add(new Projectile(position.copy(), vel, damage, pierce, 25));
+      }
       timer = cooldown;
       break; 
     }
