@@ -14,6 +14,8 @@ String selectedMonkeyType = null;
 boolean selectingMonkey = false;
 PImage dartMonkey;
 PImage sniperMonkey;
+PImage engineerMonkey;
+PImage wizardMonkey;
 int outOfMoney;
 ArrayList<Projectile> projectiles;
 ArrayList<Round> round;
@@ -33,6 +35,8 @@ void setup() {
 
   dartMonkey = loadImage("images/dartMonkey.png");
   sniperMonkey = loadImage("images/sniperMonkey.png");
+  engineerMonkey = loadImage("images/Engineer.png");
+  wizardMonkey = loadImage("images/Wizard.png");
   
   monkeys = new ArrayList<Monkey>();
   //monkeyImage = loadImage("images/Monkey.png");
@@ -122,6 +126,16 @@ void mousePressed() {
       draggedmonkeytemporarything = new Monkey(sniperMonkey, mouseX, mouseY, "Sniper");
       selectingMonkey = false;
       return;
+    } else if(mouseY > 120 && mouseY < 160 && mouseX > 20 && mouseX < 140) {
+      selectedMonkeyType = "Engineer";
+      draggedmonkeytemporarything = new Monkey(engineerMonkey, mouseX, mouseY, "Engineer");
+      selectingMonkey = false;
+      return;
+    } else if(mouseY > 170 && mouseY < 210 && mouseX > 20 && mouseX < 140) {
+      selectedMonkeyType = "Wizard";
+      draggedmonkeytemporarything = new Monkey(wizardMonkey, mouseX, mouseY, "Wizard");
+      selectingMonkey = false;
+      return;
     }
   }
 
@@ -156,6 +170,31 @@ void mousePressed() {
     else if(draggedmonkeytemporarything.getType().equals("Sniper")){
       if(myGame.getMoney() >= 300){
         myGame.setMoney(myGame.getMoney() - 300);
+        monkeys.add(draggedmonkeytemporarything);
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+      else{
+        outOfMoney = 30;
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+    }
+    else if(draggedmonkeytemporarything.getType().equals("Engineer")){
+      if(myGame.getMoney() >= 600){
+        myGame.setMoney(myGame.getMoney() - 600);
+        monkeys.add(draggedmonkeytemporarything);
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+      else{
+        outOfMoney = 30;
+        draggedmonkeytemporarything = null;
+        selectedMonkeyType = null;
+      }
+    } else if(draggedmonkeytemporarything.getType().equals("Wizard")){
+      if(myGame.getMoney() >= 800){
+        myGame.setMoney(myGame.getMoney() - 800);
         monkeys.add(draggedmonkeytemporarything);
         draggedmonkeytemporarything = null;
         selectedMonkeyType = null;
@@ -294,6 +333,7 @@ void drawMonkeySelectionUI() {
   fill(255);
   stroke(0);
   rect(20, 20, 120, 40);
+  textSize(15);
   fill(0);
   textAlign(CENTER, CENTER);
   text("Dart Monkey", 80, 40);
@@ -303,7 +343,18 @@ void drawMonkeySelectionUI() {
   rect(20, 70, 120, 40);
   fill(0);
   text("Sniper Monkey", 80, 90);
-
+  
+  fill(255);
+  stroke(0);
+  rect(20, 120, 120, 40);
+  fill(0);
+  text("Monkey Engineer", 80, 140);
+  
+  fill(255);
+  stroke(0);
+  rect(20, 170, 120, 40);
+  fill(0);
+  text("Wizard Monkey", 80, 190);
   fill(50, 50, 255, 100);
   textSize(14);
   text("Click to choose a monkey", width/2, height - 30);
