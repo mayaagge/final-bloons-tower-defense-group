@@ -70,8 +70,8 @@ class RoundProgress {
     ArrayList<BloonType> round8Types = new ArrayList<>();
     round8Types.add(yellow);
     round8Types.add(pink);
-    round7Types.add(green);
-    round7Types.add(blue);
+    round8Types.add(green);
+    round8Types.add(blue);
     ArrayList<Integer> round8Counts = new ArrayList<>();
     round8Counts.add(15);
     round8Counts.add(5);
@@ -87,8 +87,8 @@ class RoundProgress {
     rounds.add(new Round(6, round6Types, round6Counts));
     rounds.add(new Round(7, round7Types, round7Counts));
     rounds.add(new Round(8, round8Types, round8Counts));
-    rounds.add(new Round(9, round9Types, round9Counts));
-    rounds.add(new Round(10, round10Types, round10Counts));
+    //rounds.add(new Round(9, round9Types, round9Counts));
+    //rounds.add(new Round(10, round10Types, round10Counts));
 
 
       }
