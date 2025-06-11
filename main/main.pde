@@ -4,6 +4,7 @@ Game myGame;
 PImage mapBackground;
 PImage STARTSCREEN;
 PImage LOSESCREEN;
+PImage WINSCREEN;
 static ArrayList<BloonType> allBloonTypes = new ArrayList<BloonType>();
 ArrayList<Bloon> bloons = new ArrayList<Bloon>();
 boolean gameStarted = false;
@@ -32,7 +33,7 @@ void setup() {
   mapBackground = loadImage("images/MonkeyMeadow.png");
   STARTSCREEN = loadImage("images/STARTSCREEN.png");
   LOSESCREEN = loadImage("images/LOSESCREEN.jpg");
-  
+  WINSCREEN = loadImage("images/WINSCREEN.png");
 
   dartMonkey = loadImage("images/dartMonkey.png");
   sniperMonkey = loadImage("images/sniperMonkey.png");
@@ -250,6 +251,7 @@ void draw() {
   drawPath();
   myGame.drawLives();
   myGame.drawMoney();
+  myGame.drawRound();
   
   //ArrayList<Bloon> r1 = new ArrayList<>;
   //round.add(new Round(
@@ -294,7 +296,11 @@ void draw() {
     image(LOSESCREEN, 0, 0, width, height);
     return;
   }
-
+  if (currRound == null && bloons.isEmpty() && myGame.getLives() > 0) {
+    background(50);
+    image(WINSCREEN, 0, 0, width, height);
+    return;
+  }
   for(int i = projectiles.size()-1; i>=0;i--){
     Projectile proj = projectiles.get(i);
     if (proj.getPierce() <= 0) {
