@@ -266,15 +266,21 @@ void draw() {
   
   for (int i = bloons.size() - 1; i >= 0; i--) {
     Bloon b = bloons.get(i);
-    if(b.getPopTime() >= 2){
+    if (b.getPopTime() >= 2 || b.reachedEnd) {
       bloons.remove(i);
-    }
-    else{
+    } else {
       b.update();
       b.display();
     }
   }
-   if ((currRound == null || currRound.isFinished()) && bloons.isEmpty()) {
+  boolean allBloonsGone = true;
+  for (Bloon b : bloons) {
+    if (!b.popped && !b.reachedEnd) {
+      allBloonsGone = false;
+      break;
+    }
+  }
+   if ((currRound == null || currRound.isFinished()) && allBloonsGone)  {
     currroundInd++;
     if (currroundInd < RoundProgress.rounds.size()) {
       currRound = RoundProgress.rounds.get(currroundInd);
