@@ -213,6 +213,15 @@ void draw() {
       b.display();
     }
   }
+   if ((currRound == null || currRound.isFinished()) && bloons.isEmpty()) {
+    currroundInd++;
+    if (currroundInd < RoundProgress.rounds.size()) {
+      currRound = RoundProgress.rounds.get(currroundInd);
+      roundMessageTimer = 120; 
+    } else {
+      currRound = null;
+    }
+  }
   if (myGame.getLives() <= 0) {
     background(50);
     image(LOSESCREEN, 0, 0, width, height);
@@ -246,15 +255,7 @@ void draw() {
   if (selectingMonkey) {
     drawMonkeySelectionUI();
   }
-  if ((currRound == null || currRound.isFinished()) && bloons.isEmpty()) {
-    currroundInd++;
-    if (currroundInd < RoundProgress.rounds.size()) {
-      currRound = RoundProgress.rounds.get(currroundInd);
-      roundMessageTimer = 120; 
-    } else {
-      currRound = null;
-    }
-  }
+
   if (outOfMoney > 0) {
     fill(255, 0, 0);
     textAlign(CENTER, CENTER);
