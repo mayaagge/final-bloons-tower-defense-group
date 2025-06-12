@@ -151,7 +151,7 @@ class Monkey {
       }
     }
     noFill();
-    ellipse(position.x, position.y, (type.equals("Sniper") ? 50 : range * 2), (type.equals("Sniper") ? 50 : range * 2));
+    ellipse(position.x, position.y, ((type.equals("Sniper") || type.equals("Dartling")) ? 50 : range * 2), ((type.equals("Sniper") || type.equals("Dartling"))? 50 : range * 2));
   }
 
   String getType() {
