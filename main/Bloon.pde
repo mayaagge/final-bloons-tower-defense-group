@@ -77,8 +77,12 @@ void lowerHealth(int n, ArrayList<Bloon> newBloons) {
   health -= n;
 
   if (health <= 0) {
-    popped = true;
-    myGame.setMoney(myGame.getMoney() + type.reward);
+    if (!popped) {
+      popped = true;
+      poptime = 0;
+      myGame.setMoney(myGame.getMoney() + type.reward);
+    }
+
 
     if (type.childType != null && !type.childType.equals("")) {
       BloonType childType = main.gimmeTheDamnBloonType(type.childType);
