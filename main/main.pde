@@ -4,6 +4,7 @@ Game myGame;
 PImage mapBackground;
 PImage STARTSCREEN;
 PImage LOSESCREEN;
+PImage WINSCREEN;
 static ArrayList<BloonType> allBloonTypes = new ArrayList<BloonType>();
 ArrayList<Bloon> bloons = new ArrayList<Bloon>();
 boolean gameStarted = false;
@@ -24,6 +25,8 @@ RoundProgress RoundProgress;
 Round currRound = null;
 int currroundInd = -1;
 int roundMessageTimer = 0;
+ArrayList<LightningStrike> lightningStrikes = new ArrayList<>();
+ArrayList<Sentry> sentries = new ArrayList<>();
 
 void setup() {
   size(1080, 720);
@@ -32,7 +35,7 @@ void setup() {
   mapBackground = loadImage("images/MonkeyMeadow.png");
   STARTSCREEN = loadImage("images/STARTSCREEN.png");
   LOSESCREEN = loadImage("images/LOSESCREEN.jpg");
-  
+  WINSCREEN = loadImage("images/WINSCREEN.png");
 
   dartMonkey = loadImage("images/dartMonkey.png");
   sniperMonkey = loadImage("images/sniperMonkey.png");
@@ -250,6 +253,7 @@ void draw() {
   drawPath();
   myGame.drawLives();
   myGame.drawMoney();
+  myGame.drawRound();
   
   //ArrayList<Bloon> r1 = new ArrayList<>;
   //round.add(new Round(
@@ -266,15 +270,21 @@ void draw() {
   
   for (int i = bloons.size() - 1; i >= 0; i--) {
     Bloon b = bloons.get(i);
-    if(b.getPopTime() >= 2){
+    if (b.getPopTime() >= 2 || b.reachedEnd) {
       bloons.remove(i);
-    }
-    else{
+    } else {
       b.update();
       b.display();
     }
   }
-   if ((currRound == null || currRound.isFinished()) && bloons.isEmpty()) {
+  boolean allBloonsGone = true;
+  for (Bloon b : bloons) {
+    if (!b.popped && !b.reachedEnd) {
+      allBloonsGone = false;
+      break;
+    }
+  }
+   if ((currRound == null || currRound.isFinished()) && allBloonsGone)  {
     currroundInd++;
     if (currroundInd < RoundProgress.rounds.size()) {
       currRound = RoundProgress.rounds.get(currroundInd);
@@ -288,7 +298,11 @@ void draw() {
     image(LOSESCREEN, 0, 0, width, height);
     return;
   }
-
+  if (currRound == null && bloons.isEmpty() && myGame.getLives() > 0) {
+    background(50);
+    image(WINSCREEN, 0, 0, width, height);
+    return;
+  }
   for(int i = projectiles.size()-1; i>=0;i--){
     Projectile proj = projectiles.get(i);
     if (proj.getPierce() <= 0) {
@@ -301,7 +315,23 @@ void draw() {
       projectiles.remove(i);
     }
   }
+    for (int i = lightningStrikes.size()-1; i >= 0; i--) {
+    LightningStrike ls = lightningStrikes.get(i);
+    ls.display();
+    ls.duration--;
+    if (ls.duration <= 0) lightningStrikes.remove(i);
+  }
+ 
   
+    for (int i = sentries.size() - 1; i >= 0; i--) {
+      Sentry s = sentries.get(i);
+      s.update(bloons, projectiles);
+      s.display();
+      if (s.lifetime <= 0) {
+        sentries.remove(i);
+      }
+    }
+
   bloons.addAll(newBloons);
   sortBloonsByProgress(bloons);
   for (Monkey m : monkeys) {
@@ -324,6 +354,8 @@ void draw() {
     text("Not enough money!", width / 2, height - 60);
     outOfMoney--;
   }
+
+
 }
 
 void drawLives() {
@@ -413,4 +445,18 @@ void sortBloonsByProgress(ArrayList<Bloon> bloonList) {
       }
     }
   }
+}
+Bloon findNextBloon(Bloon from, ArrayList<Bloon> bloons) {
+  Bloon closest = null;
+  float minDist = 100;
+  for (Bloon b : bloons) {
+    if (!b.popped && !b.reachedEnd && b != from) {
+      float d = PVector.dist(b.position, from.position);
+      if (d < minDist) {
+        minDist = d;
+        closest = b;
+      }
+    }
+  }
+  return closest;
 }

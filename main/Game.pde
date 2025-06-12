@@ -39,16 +39,32 @@ int getGameMode(){
 }
 
 void drawLives() {
+  fill(255);
+  stroke(0);
+  rect(width - 150, 20, 120, 40); 
   fill(0);
-  textSize(24);
-  textAlign(RIGHT, TOP);
-  text("Lives: " + lives, width - 20, 20);
+  textSize(18);
+  textAlign(CENTER, CENTER);
+  text("Lives: " + lives, width - 90, 40);
 }
 
 void drawMoney() {
+  fill(255);
+  stroke(0);
+  rect(width - 290, 20, 120, 40); 
   fill(0);
-  textSize(24);
-  textAlign(RIGHT, TOP);
-  text("Moneys: " + money, width - 200, 20);
+  textSize(18);
+  textAlign(CENTER, CENTER);
+  text("Money: " + money, width - 230, 40);
+}
+void drawRound(){
+  fill(255);
+  stroke(0);
+  rect(width - 160, height - 60, 140, 40);
+  
+  fill(0);
+  textSize(18);
+  textAlign(CENTER, CENTER);
+  text("Round " + (currroundInd + 1), width - 90, height - 40);
 }
 }
