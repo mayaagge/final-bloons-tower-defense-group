@@ -25,6 +25,8 @@ RoundProgress RoundProgress;
 Round currRound = null;
 int currroundInd = -1;
 int roundMessageTimer = 0;
+ArrayList<LightningStrike> lightningStrikes = new ArrayList<>();
+ArrayList<Sentry> sentries = new ArrayList<>();
 
 void setup() {
   size(1080, 720);
@@ -313,7 +315,23 @@ void draw() {
       projectiles.remove(i);
     }
   }
+    for (int i = lightningStrikes.size()-1; i >= 0; i--) {
+    LightningStrike ls = lightningStrikes.get(i);
+    ls.display();
+    ls.duration--;
+    if (ls.duration <= 0) lightningStrikes.remove(i);
+  }
+ 
   
+    for (int i = sentries.size() - 1; i >= 0; i--) {
+      Sentry s = sentries.get(i);
+      s.update(bloons, projectiles);
+      s.display();
+      if (s.lifetime <= 0) {
+        sentries.remove(i);
+      }
+    }
+
   bloons.addAll(newBloons);
   sortBloonsByProgress(bloons);
   for (Monkey m : monkeys) {
@@ -336,6 +354,8 @@ void draw() {
     text("Not enough money!", width / 2, height - 60);
     outOfMoney--;
   }
+
+
 }
 
 void drawLives() {
@@ -425,4 +445,18 @@ void sortBloonsByProgress(ArrayList<Bloon> bloonList) {
       }
     }
   }
+}
+Bloon findNextBloon(Bloon from, ArrayList<Bloon> bloons) {
+  Bloon closest = null;
+  float minDist = 100;
+  for (Bloon b : bloons) {
+    if (!b.popped && !b.reachedEnd && b != from) {
+      float d = PVector.dist(b.position, from.position);
+      if (d < minDist) {
+        minDist = d;
+        closest = b;
+      }
+    }
+  }
+  return closest;
 }
