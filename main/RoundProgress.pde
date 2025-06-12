@@ -75,8 +75,28 @@ class RoundProgress {
     ArrayList<Integer> round8Counts = new ArrayList<>();
     round8Counts.add(15);
     round8Counts.add(5);
-     round8Counts.add(15);
+    round8Counts.add(15);
     round8Counts.add(5);
+    ArrayList<BloonType> round9Types = new ArrayList<>();
+    round9Types.add(yellow);
+    round9Types.add(green);
+    round9Types.add(blue);
+    round9Types.add(pink);
+    ArrayList<Integer> round9Counts = new ArrayList<>();
+    round9Counts.add(20);
+    round9Counts.add(10);
+    round9Counts.add(20);
+    round9Counts.add(10);
+    ArrayList<BloonType> round10Types = new ArrayList<>();
+    round10Types.add(pink);
+    round10Types.add(green);
+    round10Types.add(blue);
+    round10Types.add(yellow);
+    ArrayList<Integer> round10Counts = new ArrayList<>();
+    round10Counts.add(20);
+    round10Counts.add(10);
+    round10Counts.add(20);
+    round10Counts.add(10);
 
 
     rounds.add(new Round(1, round1Types, round1Counts));
@@ -87,8 +107,8 @@ class RoundProgress {
     rounds.add(new Round(6, round6Types, round6Counts));
     rounds.add(new Round(7, round7Types, round7Counts));
     rounds.add(new Round(8, round8Types, round8Counts));
-    //rounds.add(new Round(9, round9Types, round9Counts));
-    //rounds.add(new Round(10, round10Types, round10Counts));
+    rounds.add(new Round(9, round9Types, round9Counts));
+    rounds.add(new Round(10, round10Types, round10Counts));
 
 
       }
